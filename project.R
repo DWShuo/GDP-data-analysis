@@ -57,11 +57,11 @@ rownames(compB) <- make.names(compB[,1],unique=TRUE)#reset row labels
 compB <- compB[,-1]#remove row names rows
 compB[] <- lapply(compB, as.numeric)
 
-compB["Metal.mining",] <- compB["Metal.mining",]+compB["Coal.mining",]+compB["Nonmetallic.minerals,.exceot fuels",]
+compB["Metal.mining",] <- compB["Metal.mining",]+compB["Coal.mining",]+compB["Nonmetallic.minerals,.except.fuels",]
 rownames(compB)[rownames(compB) == 'Metal.mining'] <- 'Mining,.except.oil.and.gas'
-compB = compB[!row.names(compB)%in%c("Coal.mining","Nonmetallic.minerals,.exceot fuels"),]
+compB = compB[!row.names(compB)%in%c("Coal.mining","Nonmetallic.minerals,.except.fuels"),]
 
-compB["Lumber.and.basic.timber.products",] <- compB["Lumber.and.wood.products",]+compB["Furniture.and.fixtures",]
+compB["Lumber.and.wood.products",] <- compB["Lumber.and.wood.products",]+compB["Furniture.and.fixtures",]
 rownames(compB)[rownames(compB) == "Lumber.and.wood.products"] <- 'Wood.products'
 compB = compB[!row.names(compB)%in%c("Furniture.and.fixtures"),]
 
@@ -76,6 +76,49 @@ compB = compB[!row.names(compB)%in%c("Leather.and.leather.products"),]
 compB = compB[!row.names(compB)%in%c("Telephone.and.telegraph","Radio.and.television","Electric..gas..and.sanitary.services","Wholesale.trade","Retail.trade"),]
 rownames(compB)[rownames(compB) == "Communication"] <- "Broadcasting.and.telecommunications"
 
-compA["Insurance.carriers",] <- compA["Insurance.carriers",]+compA["Insurance.agents..brokers..and.service",]
-rownames(compA)[rownames(compA) == "Insurance.carriers"] <- 'Insurance.carriers.and.related.activites'
-compA = compA[!row.names(compA)%in%c("Insurance.agents..brokers..and.service"),]
+compB["Insurance.carriers",] <- compB["Insurance.carriers",]+compB["Insurance.agents..brokers..and.service",]
+rownames(compB)[rownames(compB) == "Insurance.carriers"] <- 'Insurance.carriers.and.related.activites'
+compB = compB[!row.names(compB)%in%c("Insurance.agents..brokers..and.service"),]
+
+compB = compB[!row.names(compB)%in%c("Holding.and.other.investment.offices"),]
+
+#=========== COMPC =============================================
+compC <- data.frame(compC)#put in dataframe
+compC <- compC[-(1:6),] #romve top rows
+compC <- head(compC,-13) #remove botttom rows
+compC <- compC[,-c(1,3)]#remove useless rows
+compC[1,1] <- "Industry" #replace title
+compC[,1] <- str_remove(compC[,1],"\\\\[:digit:]\\\\")
+ 
+names(compC) <- compC[1,]#set column names
+compC <- compC[-1,]#remove column names rows
+rownames(compC) <- make.names(compC[,1],unique=TRUE)#reset row labels
+compC <- compC[,-1]#remove row names rows
+compC[] <- lapply(compC, as.numeric)
+ 
+compC["Metal.mining",] <- compC["Metal.mining",]+compC["Coal.mining",]+compC["Nonmetallic.minerals..except.fuels",]
+rownames(compC)[rownames(compC) == 'Metal.mining'] <- 'Mining,.except.oil.and.gas'
+compC = compC[!row.names(compC)%in%c("Coal.mining","Nonmetallic.minerals,.except.fuels"),]
+ 
+compC["Lumber.and.wood.products",] <- compC["Lumber.and.wood.products",]+compC["Furniture.and.fixtures",]
+rownames(compC)[rownames(compC) == "Lumber.and.wood.products"] <- 'Wood.products'
+compC = compC[!row.names(compC)%in%c("Furniture.and.fixtures"),]
+ 
+compC["Food.and.kindred.products",] <- compC["Food.and.kindred.products",]+compC["Tobacco.products",]
+rownames(compC)[rownames(compC) == "Food.and.kindred.products"] <- 'Food.and.beverage.and.tobacco.products'
+compC = compC[!row.names(compC)%in%c("Tobacco.manufactures"),]
+ 
+compC["Apparel.and.other.textile.products",] <- compC["Apparel.and.other.textile.products",]+compC["Leather.and.leather.products",]
+rownames(compC)[rownames(compC) == "Apparel.and.other.textile.products"] <- 'Apparel.and.leather.and.allied.products'
+compC = compC[!row.names(compC)%in%c("Leather.and.leather.products"),]
+ 
+compC = compC[!row.names(compC)%in%c("Telephone.and.telegraph","Radio.and.television","Electric..gas..and.sanitary.services","Wholesale.trade","Retail.trade"),]
+rownames(compC)[rownames(compC) == "Communication"] <- "Broadcasting.and.telecommunications"
+ 
+compC["Insurance.carriers",] <- compC["Insurance.carriers",]+compC["Insurance.agents..brokers..and.service",]
+rownames(compC)[rownames(compC) == "Insurance.carriers"] <- 'Insurance.carriers.and.related.activites'
+compC = compC[!row.names(compC)%in%c("Insurance.agents..brokers..and.service"),]
+ 
+compC = compC[!row.names(compC)%in%c("Holding.and.other.investment.offices"),]
+
+#=========== COMPD =============================================

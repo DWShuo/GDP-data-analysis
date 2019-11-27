@@ -30,10 +30,10 @@ bTaxB <- read_excel("Section6.xlsx",sheet ="T61700B-A")
 bTaxC <- read_excel("Section6.xlsx",sheet ="T61700C-A")
 bTaxD <- read_excel("Section6.xlsx",sheet ="T61700D-A")
 
-TaxA <- read_excel("Section6.xlsx",sheet ="T61800A-A")
-TaxB <- read_excel("Section6.xlsx",sheet ="T61800B-A")
-TaxC <- read_excel("Section6.xlsx",sheet ="T61800C-A")
-TaxD <- read_excel("Section6.xlsx",sheet ="T61800D-A")
+TaxA <- read_excel("Section6.xlsx",sheet ="T61900A-A")
+TaxB <- read_excel("Section6.xlsx",sheet ="T61900B-A")
+TaxC <- read_excel("Section6.xlsx",sheet ="T61900C-A")
+TaxD <- read_excel("Section6.xlsx",sheet ="T61900D-A")
 
 #=========== COMPA =============================================
 compA <- data.frame(compA)#put in dataframe
@@ -591,14 +591,14 @@ TaxA = TaxA[!row.names(TaxA)%in%c("Services","Hotels.and.other.lodging.places","
 TaxA = TaxA[!row.names(TaxA)%in%c("Membership.organizations","Miscellaneous.professional.services","Private.households"),]
 rownames(TaxA)[rownames(TaxA) == "Educational.services..n.e.c."] <- 'Educational.services'
 
-TaxA = TaxA[!row.names(TaxA)%in%c("General.government","Government.enterprises","General.government.1","Government.enterprises.1","Other.services"),]
+TaxA = TaxA[!row.names(TaxA)%in%c("General.government","Government.enterprises","General.government.1","Government.enterprises.1","Other.services","Social.services.and.membership.organizations"),]
 
-TaxA = TaxA[-ncol(TaxA)]
+#TaxA = TaxA[-ncol(TaxA)]
 
 #=========== TaxB =============================================
 TaxB <- data.frame(TaxB)#put in dataframe
 TaxB <- TaxB[-(1:6),] #romve top rows
-TaxB <- head(TaxB,-6) #remove botttom rows
+TaxB <- head(TaxB,-8) #remove botttom rows
 TaxB <- TaxB[,-c(1,3)]#remove useless rows
 TaxB[1,1] <- "Industry" #replace title
 TaxB[,1] <- str_remove(TaxB[,1],"\\\\[:digit:]\\\\")
@@ -657,7 +657,7 @@ TaxB = TaxB[!row.names(TaxB)%in%c("General.government","Civilian","Military","Go
 #=========== TaxC =============================================
 TaxC <- data.frame(TaxC)#put in dataframe
 TaxC <- TaxC[-(1:6),] #romve top rows
-TaxC <- head(TaxC,-6) #remove botttom rows
+TaxC <- head(TaxC,-8) #remove botttom rows
 TaxC <- TaxC[,-c(1,3)]#remove useless rows
 TaxC[1,1] <- "Industry" #replace title
 TaxC[,1] <- str_remove(TaxC[,1],"\\\\[:digit:]\\\\")
@@ -717,7 +717,7 @@ TaxC = TaxC[!row.names(TaxC)%in%c("General.government","Civilian","Military","Go
 #=========== TaxD =============================================
 TaxD <- data.frame(TaxD)#put in dataframe
 TaxD <- TaxD[-(1:6),] #romve top rows
-TaxD <- head(TaxD,-9) #remove botttom rows
+TaxD <- head(TaxD,-12) #remove botttom rows
 TaxD <- TaxD[,-c(1,3)]#remove useless rows
 TaxD[1,1] <- "Industry" #replace title
 TaxD[,1] <- str_remove(TaxD[,1],"\\\\[:digit:]\\\\")
@@ -777,14 +777,33 @@ TaxD = TaxD[c(1:41,45,44,42,43,46:nrow(TaxD)),]
 TaxD = TaxD[!row.names(TaxD)%in%c("General.government","Civilian","Military","Government.enterprises","General.government.1","Education","Other","Government.enterprises.1"),]
 TaxD <- head(TaxD,-2) #remove botttom rows
 
+#=========== Correct col names ============
+destroyX = function(es) {
+        f = es
+        for (col in c(1:ncol(f))){ #for each column in dataframe
+                if (startsWith(colnames(f)[col], "X") == TRUE)  { #if starts with 'X' ..
+                        colnames(f)[col] <- substr(colnames(f)[col], 2, 100) #get rid of it
+                }
+        }
+        assign(deparse(substitute(es)), f, inherits = TRUE) #assign corrected data to original name
+}
 #=========== Compensation combined =============================================
 comp = cbind(compA,compB,compC,compD)
-compD = compD[!row.names(compD)%in%c("Government","Federal","State.and.local","Private.industries"),]
-comp = t(t(comp)*CPImulti)
-#=========== Compensation combined =============================================
+comp = data.frame(t(t(comp)*CPImulti))
+comp = destroyX(comp)
+comp = comp[!row.names(comp)%in%c("Government","Federal","State.and.local","Private.industries","Health.services","Legal.services","Educational.services"),]
+#=========== Before Tax =============================================
 bTax = cbind(bTaxA,bTaxB,bTaxC,bTaxD)
-bTax = t(t(bTax)*CPImulti)
-#=========== Compensation combined =============================================
-Tax = cbind(TaxA,TaxB,TaxC,TaxD)
-Tax = t(t(Tax)*CPImulti)
-
+bTax = data.frame(t(t(bTax)*CPImulti))
+bTax = destroyX(bTax)
+bTax = bTax[!row.names(bTax)%in%c("Health.services","Legal.services","Educational.services"),]
+#=========== Tax Amount =============================================
+aTax = cbind(TaxA,TaxB,TaxC,TaxD)
+aTax = data.frame(t(t(aTax)*CPImulti))
+aTax = destroyX(aTax)
+aTax = aTax[!row.names(aTax)%in%c("Health.services","Legal.services","Educational.services"),]
+#=========== Calculate Tax percentage ===========================================
+taxRate <- abs((bTax-aTax)/bTax)
+is.nan.data.frame <- function(x) do.call(cbind, lapply(x, is.nan)) #set nan to 0
+taxRate[is.nan(taxRate)] <- 0
+taxRate = taxRate[ ,!(names(taxRate) %in% c("2017","2018"))]

@@ -35,6 +35,11 @@ TaxB <- read_excel("Section6.xlsx",sheet ="T61900B-A")
 TaxC <- read_excel("Section6.xlsx",sheet ="T61900C-A")
 TaxD <- read_excel("Section6.xlsx",sheet ="T61900D-A")
 
+empA <- read_excel("Section6.xlsx",sheet ="T60400A-A")
+empB <- read_excel("Section6.xlsx",sheet ="T60400B-A")
+empC <- read_excel("Section6.xlsx",sheet ="T60400C-A")
+empD <- read_excel("Section6.xlsx",sheet ="T60400D-A")
+
 #=========== COMPA =============================================
 compA <- data.frame(compA)#put in dataframe
 compA <- compA[-(1:6),] #romve top rows
@@ -165,7 +170,7 @@ compB = compB[!row.names(compB)%in%c("General.government","Civilian","Military",
 compC <- data.frame(compC)#put in dataframe
 compC <- compC[-(1:6),] #romve top rows
 compC <- head(compC,-13) #remove botttom rows
-compC <- compC[,-c(1,3)]#remove useless rows
+compC <- compC[,-c(1,3,4)]#remove useless rows
 compC[1,1] <- "Industry" #replace title
 compC[,1] <- str_remove(compC[,1],"\\\\[:digit:]\\\\")
  
@@ -409,7 +414,7 @@ bTaxB = bTaxB[!row.names(bTaxB)%in%c("General.government","Civilian","Military",
 bTaxC <- data.frame(bTaxC)#put in dataframe
 bTaxC <- bTaxC[-(1:6),] #romve top rows
 bTaxC <- head(bTaxC,-8) #remove botttom rows
-bTaxC <- bTaxC[,-c(1,3)]#remove useless rows
+bTaxC <- bTaxC[,-c(1,3,4)]#remove useless rows
 bTaxC[1,1] <- "Industry" #replace title
 bTaxC[,1] <- str_remove(bTaxC[,1],"\\\\[:digit:]\\\\")
  
@@ -658,7 +663,7 @@ TaxB = TaxB[!row.names(TaxB)%in%c("General.government","Civilian","Military","Go
 TaxC <- data.frame(TaxC)#put in dataframe
 TaxC <- TaxC[-(1:6),] #romve top rows
 TaxC <- head(TaxC,-8) #remove botttom rows
-TaxC <- TaxC[,-c(1,3)]#remove useless rows
+TaxC <- TaxC[,-c(1,3,4)]#remove useless rows
 TaxC[1,1] <- "Industry" #replace title
 TaxC[,1] <- str_remove(TaxC[,1],"\\\\[:digit:]\\\\")
  
@@ -777,6 +782,272 @@ TaxD = TaxD[c(1:41,45,44,42,43,46:nrow(TaxD)),]
 TaxD = TaxD[!row.names(TaxD)%in%c("General.government","Civilian","Military","Government.enterprises","General.government.1","Education","Other","Government.enterprises.1"),]
 TaxD <- head(TaxD,-2) #remove botttom rows
 
+#=========== empA =============================================
+empA <- data.frame(empA)#put in dataframe
+empA <- empA[-(1:6),] #romve top rows
+empA <- head(empA,-9) #remove botttom rows
+empA <- empA[,-c(1,3)]#remove useless rows
+empA[1,1] <- "Industry" #replace title
+empA[,1] <- str_remove(empA[,1],"\\\\[:digit:]\\\\")
+
+names(empA) <- empA[1,]#set column names
+empA <- empA[-1,]#remove column names rows
+rownames(empA) <- make.names(empA[,1],unique=TRUE)#reset row labels
+empA <- empA[,-1]#remove row names rows
+empA[] <- lapply(empA, as.numeric)
+empA[is.na(empA)] <- 0
+
+rownames(empA)[rownames(empA) == 'Agricultural.services..forestry..and.fisheries'] <- 'Forestry..fishing..and.related.activities'
+
+empA["Metal.mining",] <- empA["Metal.mining",]+empA["Anthracite.mining",]+empA["Bituminous.and.other.soft.coal.mining",]+empA["Nonmetallic.mining.and.quarrying",]
+rownames(empA)[rownames(empA) == 'Metal.mining'] <- 'Mining..except.oil.and.gas'
+rownames(empA)[rownames(empA) == 'Crude.petroleum.and.natural.gas'] <- 'Oil.and.gas.extraction'
+empA = empA[!row.names(empA)%in%c("Anthracite.mining","Bituminous.and.other.soft.coal.mining","Nonmetallic.mining.and.quarrying"),]
+
+rownames(empA)[rownames(empA) == 'Contract.construction'] <- 'Construction'
+
+empA["Lumber.and.basic.timber.products",] <- empA["Lumber.and.basic.timber.products",]+empA["Furniture.and.finished.lumber.products",]
+rownames(empA)[rownames(empA) == "Lumber.and.basic.timber.products"] <- 'Wood.products'
+empA = empA[!row.names(empA)%in%c("Furniture.and.finished.lumber.products"),]
+
+rownames(empA)[rownames(empA) == "Iron.and.steel.and.their.products..including.ordnance"] <- "Primary.metal.industries"
+rownames(empA)[rownames(empA) == "Nonferrous.metals.and.their.products"] <- "Fabricated.metal.products"
+rownames(empA)[rownames(empA) == "Machinery..except.electrical"] <- "Machinery"
+rownames(empA)[rownames(empA) == "Miscellaneous.manufacturing..including.instruments.and.miscellaneous.plastic.products"] <- "Miscellaneous.manufacturing"
+
+empA["Food.and.kindred.products",] <- empA["Food.and.kindred.products",]+empA["Tobacco.manufactures",]
+rownames(empA)[rownames(empA) == "Food.and.kindred.products"] <- 'Food.and.beverage.and.tobacco.products'
+empA = empA[!row.names(empA)%in%c("Tobacco.manufactures"),]
+
+empA["Apparel.and.other.textile.products",] <- empA["Apparel.and.other.textile.products",]+empA["Leather.and.leather.products",]
+rownames(empA)[rownames(empA) == "Apparel.and.other.textile.products"] <- 'Apparel.and.leather.and.allied.products'
+empA = empA[!row.names(empA)%in%c("Leather.and.leather.products"),]
+
+rownames(empA)[rownames(empA) == "Rubber.products"] <- 'Plastics.and.rubber.products'
+empA = empA[!row.names(empA)%in%c("Transportation.and.public.utilities","Transportation","Transportation.services"),]
+
+rownames(empA)[rownames(empA) == "Trucking.and.warehousing"] <- 'Truck.transportation'
+rownames(empA)[rownames(empA) == "Pipelines..except.natural.gas"] <- 'Pipeline.transportation'
+
+empA = empA[!row.names(empA)%in%c("Telephone.and.telegraph","Radio.and.television.broadcasting","Utilities..electric.and.gas","Local.utilities.and.public.services..n.e.c.","Wholesale.trade","Retail.trade.and.automobile.services"),]
+rownames(empA)[rownames(empA) == "Communication"] <- "Broadcasting.and.telecommunications"
+
+empA = empA[!row.names(empA)%in%c("Finance..insurance..and.real.estate"),]
+empA["Banking",] <- empA["Banking",]+empA["Credit.agencies..other.than.banks..and.holding.and.other.investment.companies",]
+rownames(empA)[rownames(empA) == "Banking"] <- 'Banking.and.credit.agencies'
+empA = empA[!row.names(empA)%in%c("Credit.agencies..other.than.banks..and.holding.and.other.investment.companies"),]
+rownames(empA)[rownames(empA) == "Security.and.commodity.brokers..and.services"] <- 'Security.and.commodity.brokers'
+
+empA["Insurance.carriers",] <- empA["Insurance.carriers",]+empA["Insurance.agents..brokers..and.service",]
+rownames(empA)[rownames(empA) == "Insurance.carriers"] <- 'Insurance.carriers.and.related.activites'
+empA = empA[!row.names(empA)%in%c("Insurance.agents..brokers..and.service"),]
+
+empA = empA[!row.names(empA)%in%c("Services","Hotels.and.other.lodging.places","Personal.services","Commercial.and.trade.schools.and.employment.agencies","Business.services","Miscellaneous.repair.services","Motion.pictures" ),]
+empA = empA[!row.names(empA)%in%c("Membership.organizations","Miscellaneous.professional.services","Private.households"),]
+rownames(empA)[rownames(empA) == "Educational.services..n.e.c."] <- 'Educational.services'
+
+empA = empA[!row.names(empA)%in%c("General.government","Government.enterprises","General.government.1","Government.enterprises.1","Other.services"),]
+
+empA = empA[!row.names(empA)%in%c("Private.industries"),]
+
+empA = empA[c(1:(nrow(empA)-12)), ]
+empA = empA[-ncol(empA)]
+
+#=========== empB =============================================
+empB <- data.frame(empB)#put in dataframe
+empB <- empB[-(1:6),] #romve top rows
+empB <- head(empB,-6) #remove botttom rows
+empB <- empB[,-c(1,3)]#remove useless rows
+empB[1,1] <- "Industry" #replace title
+empB[,1] <- str_remove(empB[,1],"\\\\[:digit:]\\\\")
+
+names(empB) <- empB[1,]#set column names
+empB <- empB[-1,]#remove column names rows
+rownames(empB) <- make.names(empB[,1],unique=TRUE)#reset row labels
+empB <- empB[,-1]#remove row names rows
+empB[] <- lapply(empB, as.numeric)
+empB[is.na(empB)] <- 0
+
+rownames(empB)[rownames(empB) == 'Agricultural.services..forestry..and.fishing'] <- 'Forestry..fishing..and.related.activities'
+
+empB["Metal.mining",] <- empB["Metal.mining",]+empB["Coal.mining",]+empB["Nonmetallic.minerals..except.fuels",]
+rownames(empB)[rownames(empB) == 'Metal.mining'] <- 'Mining..except.oil.and.gas'
+empB = empB[!row.names(empB)%in%c("Coal.mining","Nonmetallic.minerals..except.fuels"),]
+
+empB["Lumber.and.wood.products",] <- empB["Lumber.and.wood.products",]+empB["Furniture.and.fixtures",]
+rownames(empB)[rownames(empB) == "Lumber.and.wood.products"] <- 'Wood.products'
+empB = empB[!row.names(empB)%in%c("Furniture.and.fixtures"),]
+
+rownames(empB)[rownames(empB) == "Machinery..except.electrical"] <- "Machinery"
+empB = empB[!row.names(empB)%in%c("Instruments.and.related.products"),]
+rownames(empB)[rownames(empB) == "Miscellaneous.manufacturing.industries"] <- "Miscellaneous.manufacturing"
+
+empB["Food.and.kindred.products",] <- empB["Food.and.kindred.products",]+empB["Tobacco.manufactures",]
+rownames(empB)[rownames(empB) == "Food.and.kindred.products"] <- 'Food.and.beverage.and.tobacco.products'
+empB = empB[!row.names(empB)%in%c("Tobacco.manufactures"),]
+
+empB["Apparel.and.other.textile.products",] <- empB["Apparel.and.other.textile.products",]+empB["Leather.and.leather.products",]
+rownames(empB)[rownames(empB) == "Apparel.and.other.textile.products"] <- 'Apparel.and.leather.and.allied.products'
+empB = empB[!row.names(empB)%in%c("Leather.and.leather.products"),]
+
+rownames(empB)[rownames(empB) == "Rubber.and.miscellaneous.plastics.products"] <- 'Plastics.and.rubber.products'
+
+empB = empB[!row.names(empB)%in%c("Transportation.and.public.utilities","Transportation","Transportation.services"),]
+rownames(empB)[rownames(empB) == "Trucking.and.warehousing"] <- 'Truck.transportation'
+rownames(empB)[rownames(empB) == "Pipelines..except.natural.gas"] <- 'Pipeline.transportation'
+
+empB = empB[!row.names(empB)%in%c("Telephone.and.telegraph","Radio.and.television","Wholesale.trade","Retail.trade"),]
+rownames(empB)[rownames(empB) == "Communication"] <- "Broadcasting.and.telecommunications"
+
+empB = empB[!row.names(empB)%in%c("Finance..insurance..and.real.estate"),]
+empB["Banking",] <- empB["Banking",]+empB["Credit.agencies.other.than.banks",]
+rownames(empB)[rownames(empB) == "Banking"] <- 'Banking.and.credit.agencies'
+empB = empB[!row.names(empB)%in%c("Credit.agencies.other.than.banks","Federal.Reserve.banks","Commercial.and.mutual.banks"),]
+
+empB["Insurance.carriers",] <- empB["Insurance.carriers",]+empB["Insurance.agents..brokers..and.service",]
+rownames(empB)[rownames(empB) == "Insurance.carriers"] <- 'Insurance.carriers.and.related.activites'
+empB = empB[!row.names(empB)%in%c("Insurance.agents..brokers..and.service"),]
+
+empB = empB[!row.names(empB)%in%c("Holding.and.other.investment.offices","Auto.repair..services..and.parking"),]
+empB = empB[!row.names(empB)%in%c("Services","Hotels.and.other.lodging.places","Personal.services","Commercial.and.trade.schools.and.employment.agencies","Business.services","Miscellaneous.repair.services","Motion.pictures" ),]
+empB = empB[!row.names(empB)%in%c("Social.services.and.membership.organizations","Social.services","Membership.organizations","Miscellaneous.professional.services","Private.households"),]
+empB = empB[!row.names(empB)%in%c("General.government","Civilian","Military","Government.enterprises","General.government.1","Education","Other","Government.enterprises.1","Other.services"),]
+
+empB = empB[!row.names(empB)%in%c("Private.industries"),]
+
+empB = empB[c(1:(nrow(empB)-6)), ]
+
+#=========== empC =============================================
+empC <- data.frame(empC)#put in dataframe
+empC <- empC[-(1:6),] #romve top rows
+empC <- head(empC,-9) #remove botttom rows
+empC <- empC[,-c(1,3,4)]#remove useless rows
+empC[1,1] <- "Industry" #replace title
+empC[,1] <- str_remove(empC[,1],"\\\\[:digit:]\\\\")
+ 
+names(empC) <- empC[1,]#set column names
+empC <- empC[-1,]#remove column names rows
+rownames(empC) <- make.names(empC[,1],unique=TRUE)#reset row labels
+empC <- empC[,-1]#remove row names rows
+empC[] <- lapply(empC, as.numeric)
+ 
+rownames(empC)[rownames(empC) == 'Agricultural.services..forestry..and.fishing'] <- 'Forestry..fishing..and.related.activities'
+
+empC["Metal.mining",] <- empC["Metal.mining",]+empC["Coal.mining",]+empC["Nonmetallic.minerals..except.fuels",]
+rownames(empC)[rownames(empC) == 'Metal.mining'] <- 'Mining..except.oil.and.gas'
+empC = empC[!row.names(empC)%in%c("Coal.mining","Nonmetallic.minerals..except.fuels"),]
+ 
+empC["Lumber.and.wood.products",] <- empC["Lumber.and.wood.products",]+empC["Furniture.and.fixtures",]
+rownames(empC)[rownames(empC) == "Lumber.and.wood.products"] <- 'Wood.products'
+empC = empC[!row.names(empC)%in%c("Furniture.and.fixtures"),]
+
+rownames(empC)[rownames(empC) == "Industrial.machinery.and.equipment"] <- "Machinery"
+rownames(empC)[rownames(empC) == "Electronic.and.other.electric.equipment"] <- "Electric.and.electronic.equipment"
+empC = empC[!row.names(empC)%in%c("Furniture.and.fixtures"),]
+rownames(empC)[rownames(empC) == "Miscellaneous.manufacturing.industries"] <- "Miscellaneous.manufacturing"
+
+empC["Food.and.kindred.products",] <- empC["Food.and.kindred.products",]+empC["Tobacco.products",]
+rownames(empC)[rownames(empC) == "Food.and.kindred.products"] <- 'Food.and.beverage.and.tobacco.products'
+empC = empC[!row.names(empC)%in%c("Instruments.and.related.products","Tobacco.products"),]
+ 
+empC["Apparel.and.other.textile.products",] <- empC["Apparel.and.other.textile.products",]+empC["Leather.and.leather.products",]
+rownames(empC)[rownames(empC) == "Apparel.and.other.textile.products"] <- 'Apparel.and.leather.and.allied.products'
+empC = empC[!row.names(empC)%in%c("Leather.and.leather.products"),]
+
+rownames(empC)[rownames(empC) == "Rubber.and.miscellaneous.plastics.products"] <- 'Plastics.and.rubber.products'
+ 
+empC = empC[!row.names(empC)%in%c("Transportation.and.public.utilities","Transportation","Transportation.services"),]
+rownames(empC)[rownames(empC) == "Trucking.and.warehousing"] <- 'Truck.transportation'
+rownames(empC)[rownames(empC) == "Pipelines..except.natural.gas"] <- 'Pipeline.transportation'
+
+empC = empC[!row.names(empC)%in%c("Telephone.and.telegraph","Radio.and.television","Wholesale.trade","Retail.trade"),]
+rownames(empC)[rownames(empC) == "Communications"] <- "Broadcasting.and.telecommunications"
+
+empC = empC[!row.names(empC)%in%c("Finance..insurance..and.real.estate"),]
+empC["Depository.institutions",] <- empC["Depository.institutions",]+empC["Nondepository.institutions",]
+rownames(empC)[rownames(empC) == "Depository.institutions"] <- 'Banking.and.credit.agencies'
+empC = empC[!row.names(empC)%in%c("Nondepository.institutions","Federal.Reserve.banks","Commercial.and.mutual.depository.institutions"),]
+
+empC["Insurance.carriers",] <- empC["Insurance.carriers",]+empC["Insurance.agents..brokers..and.service",]
+rownames(empC)[rownames(empC) == "Insurance.carriers"] <- 'Insurance.carriers.and.related.activites'
+empC = empC[!row.names(empC)%in%c("Insurance.agents..brokers..and.service"),]
+ 
+empC = empC[!row.names(empC)%in%c("Holding.and.other.investment.offices","Auto.repair..services..and.parking"),]
+empC = empC[!row.names(empC)%in%c("Services","Hotels.and.other.lodging.places","Personal.services","Commercial.and.trade.schools.and.employment.agencies","Business.services","Miscellaneous.repair.services","Motion.pictures" ),]
+empC = empC[!row.names(empC)%in%c("Social.services.and.membership.organizations","Social.services","Membership.organizations","Other.services","Private.households"),]
+empC = empC[!row.names(empC)%in%c("General.government","Civilian","Military","Government.enterprises","General.government.1","Education","Other","Government.enterprises.1"),]
+
+empC = empC[!row.names(empC)%in%c("Private.industries"),]
+
+empC = empC[c(1:(nrow(empC)-6)), ]
+
+#=========== empD =============================================
+empD <- data.frame(empD)#put in dataframe
+empD <- empD[-(1:6),] #romve top rows
+empD <- head(empD,-12) #remove botttom rows
+empD <- empD[,-c(1,3)]#remove useless rows
+empD[1,1] <- "Industry" #replace title
+empD[,1] <- str_remove(empD[,1],"\\\\[:digit:]\\\\")
+ 
+names(empD) <- empD[1,]#set column names
+empD <- empD[-1,]#remove column names rows
+rownames(empD) <- make.names(empD[,1],unique=TRUE)#reset row labels
+empD <- empD[,-1]#remove row names rows
+empD[] <- lapply(empD, as.numeric)
+
+empD = empD[-c(1:3)]
+
+empD = empD[!row.names(empD)%in%c("Support.activities.for.mining"),]
+
+rownames(empD)[rownames(empD) == "Nonmetallic.mineral.products"] <- "Stone..clay..and.glass.products"
+
+empD = empD[!row.names(empD)%in%c("Wholesale.trade","Durable.goods.1","Nondurable.goods.1","Retail.trade","Motor.vehicle.and.parts.dealers","Food.and.beverage.stores","General.merchandise.stores","Other.retail"),]
+
+empD["Computer.and.electronic.products",] <- empD["Computer.and.electronic.products",]+empD["Electrical.equipment..appliances..and.components",]
+rownames(empD)[rownames(empD) == "Computer.and.electronic.products"] <- 'Electric.and.electronic.equipment'
+empD = empD[!row.names(empD)%in%c("Electrical.equipment..appliances..and.components"),]
+
+rownames(empD)[rownames(empD) == "Motor.vehicles..bodies.and.trailers..and.parts"] <- 'Motor.vehicles.and.equipment'
+rownames(empD)[rownames(empD) == "Textile.mills.and.textile.product.mills"] <- 'Textile.mill.products'
+rownames(empD)[rownames(empD) == "Paper.products"] <- 'Paper.and.allied.products'
+rownames(empD)[rownames(empD) == "Printing.and.related.support.activities"] <- 'Printing.and.publishing'
+rownames(empD)[rownames(empD) == "Chemical.products"] <- 'Chemicals.and.allied.products'
+rownames(empD)[rownames(empD) == "Rail.transportation"] <- 'Railroad.transportation'
+rownames(empD)[rownames(empD) == "Transit.and.ground.passenger.transportation"] <- 'Local.and.interurban.passenger.transit'
+rownames(empD)[rownames(empD) == "Air.transportation"] <- 'Transportation.by.air'
+rownames(empD)[rownames(empD) == "Utilities"] <- 'Electric..gas..and.sanitary.services'
+rownames(empD)[rownames(empD) == "Federal.Reserve.banks..credit.intermediation..and.related.activities"] <- 'Banking.credit.agencies'
+rownames(empD)[rownames(empD) == "Securities..commodity.contracts..and.investments"] <- 'Security.and.commodity.brokers'
+rownames(empD)[rownames(empD) == "Amusements..gambling..and.recreation.industries"] <- 'Amusement.and.recreation.services'
+
+empD = empD[!row.names(empD)%in%c("Furniture.and.related.products","Transportation.and.warehousing"),]
+empD = empD[!row.names(empD)%in%c("Other.transportation.and.support.activities","Warehousing.and.storage","Information","Publishing.industries..includes.software.","Motion.picture.and.sound.recording.industries","Information.and.data.processing.services"),]
+empD = empD[!row.names(empD)%in%c("Funds..trusts..and.other.financial.vehicles","Real.estate.and.rental.and.leasing","Rental.and.leasing.services.and.lessors.of.intangible.assets"),]
+empD = empD[!row.names(empD)%in%c("Finance.and.insurance","Health.care.and.social.assistance"),]
+empD = empD[!row.names(empD)%in%c("Professional..scientific..and.technical.services","Computer.systems.design.and.related.services","Miscellaneous.professional..scientific..and.technical.services","Management.of.TaxAnies.and.enterprises","Administrative.and.waste.management.services","Administrative.and.support.services","Waste.management.and.remediation.services","Social.assistance","Arts..entertainment..and.recreation","Performing.arts..spectator.sports..museums..and.related.activities","Accommodation.and.food.services","Accommodation","Food.services.and.drinking.places","Other.services..except.government"),]
+
+empD["Ambulatory.health.care.services",] <- empD["Ambulatory.health.care.services",]+empD["Hospitals",]+empD["Nursing.and.residential.care.facilities",]
+rownames(empD)[rownames(empD) == "Ambulatory.health.care.services"] <- 'Health.services'
+empD = empD[!row.names(empD)%in%c("Hospitals","Nursing.and.residential.care.facilities"),]
+
+empD = empD[!row.names(empD)%in%c("Private.industries"),]
+empD = empD[c(1:6,8,7,9:nrow(empD)),]
+empD = empD[c(1:27,29,28,30:nrow(empD)),]
+empD = empD[c(1:30,32,31,33:nrow(empD)),]
+empD = empD[c(1:31,35,34,33,32,36:nrow(empD)),]
+empD <- rbind(empD[1:8,], empD[10:37,], empD[9,], empD[38:nrow(empD),])
+
+rownames(empD)[rownames(empD) == "Credit.intermediation.and.related.activities"] <- 'Banking.credit.agencies'
+empD = empD[!row.names(empD)%in%c("Federal.Reserve.banks"),]
+
+empD = empD[!row.names(empD)%in%c("General.government","Civilian","Military","Government.enterprises","General.government.1","Education","Other","Government.enterprises.1","Management.of.companies.and.enterprises"),]
+
+empD = empD[c(1:41,45,44,42,43,46:nrow(empD)),]
+
+empD = empD[!row.names(empD)%in%c("Government","Federal","State.and.local"),]
+
+empD <- head(empD,-3) #remove botttom rows
+
 #=========== Correct col names ============
 destroyX = function(es) {
         f = es
@@ -787,6 +1058,9 @@ destroyX = function(es) {
         }
         assign(deparse(substitute(es)), f, inherits = TRUE) #assign corrected data to original name
 }
+#=========== Set nan to zero ============
+is.nan.data.frame <- function(x) do.call(cbind, lapply(x, is.nan))
+
 #=========== Compensation combined =============================================
 comp = cbind(compA,compB,compC,compD)
 comp = data.frame(t(t(comp)*CPImulti))
@@ -802,8 +1076,25 @@ aTax = cbind(TaxA,TaxB,TaxC,TaxD)
 aTax = data.frame(t(t(aTax)*CPImulti))
 aTax = destroyX(aTax)
 aTax = aTax[!row.names(aTax)%in%c("Health.services","Legal.services","Educational.services"),]
+#=========== All Employees =============================================
+emp = cbind(empA,empB,empC,empD)
 #=========== Calculate Tax percentage ===========================================
 taxRate <- abs((bTax-aTax)/bTax)
-is.nan.data.frame <- function(x) do.call(cbind, lapply(x, is.nan)) #set nan to 0
 taxRate[is.nan(taxRate)] <- 0
-taxRate = taxRate[ ,!(names(taxRate) %in% c("2017","2018"))]
+#=========== Calculate Comp per employee ===========================================
+compPer <- comp/emp
+compPer[is.nan(compPer)] <- 0
+
+taxRate = data.frame(t(taxRate[ ,!(names(taxRate) %in% c("2017","2018","1929","1930","1932","1933","1934","1931"))]))
+compPer = data.frame(t(compPer[ ,!(names(compPer) %in% c("2017","2018","1929","1930","1932","1933","1934","1931"))]))
+
+#taxRate = data.frame(t(taxRate[ ,!(names(taxRate) %in% c("2017","2018","1931"))]))
+#compPer = data.frame(t(compPer[ ,!(names(compPer) %in% c("2017","2018","1931"))]))
+
+fit <- lm(compPer$Compensation.of.employees ~ taxRate$Corporate.profits.before.tax)
+summary(fit)
+
+ggplot(fit$model, aes_string(x = names(fit$model)[2],y = names(fit$model)[1]))+geom_point()+stat_smooth(method = "lm", col = "red") + 
+        labs(title= "Employee compensation vs. Corporate tax rate", subtitle = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5)," P =",signif(summary(fit)$coef[2,4], 5)), 
+             y="Employee compensation (thousands)", x = "Corporate tax rate") + 
+        theme(plot.title = element_text(hjust = 0.5),plot.subtitle = element_text(hjust = 0.5))

@@ -1085,14 +1085,142 @@ taxRate[is.nan(taxRate)] <- 0
 compPer <- comp/emp
 compPer[is.nan(compPer)] <- 0
 
-taxRate = data.frame(t(taxRate[ ,!(names(taxRate) %in% c("2017","2018","1929","1930","1932","1933","1934","1931"))]))
-compPer = data.frame(t(compPer[ ,!(names(compPer) %in% c("2017","2018","1929","1930","1932","1933","1934","1931"))]))
+#taxRate = data.frame(t(taxRate[ ,!(names(taxRate) %in% c("2017","2018","1929","1930","1932","1933","1934","1931"))]))
+#compPer = data.frame(t(compPer[ ,!(names(compPer) %in% c("2017","2018","1929","1930","1932","1933","1934","1931"))]))
+taxRate = data.frame(t(taxRate[ ,!(names(taxRate) %in% c("2017","2018","1931"))]))
+compPer = data.frame(t(compPer[ ,!(names(compPer) %in% c("2017","2018","1931"))]))
 
-#taxRate = data.frame(t(taxRate[ ,!(names(taxRate) %in% c("2017","2018","1931"))]))
-#compPer = data.frame(t(compPer[ ,!(names(compPer) %in% c("2017","2018","1931"))]))
+#=========== Make some charats ===========================
+t1 = ggplot(taxRate, aes(x=row.names(taxRate))) + 
+        geom_line(aes(y = Corporate.profits.before.tax, color="Average Corporate Tax", group = 1), linetype = "twodash") + 
+        #geom_line(aes(y = Agriculture..forestry..and.fisheries, color="Agriculture, forestry and fisheries", group = 1)) +
+        geom_line(aes(y = Mining..except.oil.and.gas, color="Mining, exceot oil & gas", group = 1)) +
+        geom_line(aes(y = Oil.and.gas.extraction, color="Oil & gas extraction", group = 1)) +
+        geom_line(aes(y = Construction, color="Construction", group = 1)) +
+        xlab('Years') +
+        ylab('Tax rate')+
+        theme(axis.text.x = element_text(angle = 90))
 
-fit <- lm(compPer$Compensation.of.employees ~ taxRate$Corporate.profits.before.tax)
-summary(fit)
+t2 = ggplot(taxRate, aes(x=row.names(taxRate))) + 
+        geom_line(aes(y = Corporate.profits.before.tax, color = "Average Corporate Tax", group = 1), linetype = "twodash" ) + 
+        #geom_line(aes(y = Primary.metal.industries, color="Primary metals industries", group = 1)) +
+        geom_line(aes(y = Wood.products, color="Wood products", group = 1)) +
+        geom_line(aes(y = Stone..clay..and.glass.products, color="Stone, clay, glass products", group = 1)) +
+        geom_line(aes(y = Fabricated.metal.products, color="Fabricated metal industries", group = 1)) +
+        xlab('Years') +
+        ylab('Tax rate')+
+        theme(axis.text.x = element_text(angle = 90))
+
+t3 = ggplot(taxRate, aes(x=row.names(taxRate))) + 
+        geom_line(aes(y = Corporate.profits.before.tax, color = "Average Corporate Tax", group = 1), linetype = "twodash") + 
+        geom_line(aes(y = Machinery, color="Machinery", group = 1)) +
+        geom_line(aes(y = Electric.and.electronic.equipment, color="Electric and electronic equipment", group = 1)) +
+        geom_line(aes(y = Motor.vehicles.and.equipment, color="Motor Vehivles and equipment", group = 1)) +
+        #geom_line(aes(y = Miscellaneous.manufacturing, color="Moscellaneous manufacturing", group = 1)) +
+        xlab('Years') +
+        ylab('Tax rate')+
+        theme(axis.text.x = element_text(angle = 90))
+
+t4 = ggplot(taxRate, aes(x=row.names(taxRate))) + 
+        geom_line(aes(y = Corporate.profits.before.tax, color = "Average Corporate Tax", group = 1),linetype = "twodash") + 
+        geom_line(aes(y = Food.and.beverage.and.tobacco.products, color="Food, beverage and tobacco", group = 1)) +
+        #geom_line(aes(y = Textile.mill.products, color="Textile products", group = 1)) +
+        geom_line(aes(y = Apparel.and.leather.and.allied.products, color="Apparel and leather products", group = 1)) +
+        geom_line(aes(y = Printing.and.publishing, color="printing and publishing", group = 1)) +
+        xlab('Years') +
+        ylab('Tax rate')+
+        theme(axis.text.x = element_text(angle = 90))
+
+t5 = ggplot(taxRate, aes(x=row.names(taxRate))) + 
+        geom_line(aes(y = Corporate.profits.before.tax, color = "Average corporate tax", group = 1),linetype = "twodash") + 
+        geom_line(aes(y = Chemicals.and.allied.products, color = "Chemical products", group = 1)) + 
+        #geom_line(aes(y = Petroleum.and.coal.products, color="petroleum & coal products", group = 1)) +
+        geom_line(aes(y = Plastics.and.rubber.products, color="Plastics & rubber products", group = 1)) +
+        #geom_line(aes(y = Broadcasting.and.telecommunications, color="Broadcasting & telecommunications", group = 1)) +
+        geom_line(aes(y = Electric..gas..and.sanitary.services, color="Electric, gas, sanitary services", group = 1)) +
+        xlab('Years') +
+        ylab('Tax rate')+
+        theme(axis.text.x = element_text(angle = 90))
+
+t6 = ggplot(taxRate, aes(x=row.names(taxRate))) + 
+        geom_line(aes(y = Corporate.profits.before.tax, color = "Average corporate tax", group = 1),linetype = "twodash") + 
+        geom_line(aes(y = Banking.and.credit.agencies, color = "Banking and credit agencies", group = 1)) + 
+        #geom_line(aes(y = Security.and.commodity.brokers, color="Security and commodity brokers", group = 1)) +
+        geom_line(aes(y = Insurance.carriers.and.related.activites, color="Insurance related activites", group = 1)) +
+        geom_line(aes(y = Real.estate, color="real estate", group = 1)) +
+        xlab('Years') +
+        ylab('Tax rate')+
+        theme(axis.text.x = element_text(angle = 90))
+
+c1 = ggplot(compPer, aes(x=row.names(taxRate))) + 
+        geom_line(aes(y = Compensation.of.employees, color="Average Corporate Tax", group = 1), linetype = "twodash") + 
+        geom_line(aes(y = Agriculture..forestry..and.fisheries, color="Agriculture, forestry and fisheries", group = 1)) +
+        geom_line(aes(y = Mining..except.oil.and.gas, color="Mining, exceot oil & gas", group = 1)) +
+        geom_line(aes(y = Oil.and.gas.extraction, color="Oil & gas extraction", group = 1)) +
+        geom_line(aes(y = Construction, color="Construction", group = 1)) +
+        xlab('Years') +
+        ylab('Tax rate')+
+        theme(axis.text.x = element_text(angle = 90))
+
+c2 = ggplot(compPer, aes(x=row.names(taxRate))) + 
+        geom_line(aes(y = Compensation.of.employees, color = "Average Corporate Tax", group = 1), linetype = "twodash" ) + 
+        geom_line(aes(y = Primary.metal.industries, color="Primary metals industries", group = 1)) +
+        geom_line(aes(y = Wood.products, color="Wood products", group = 1)) +
+        geom_line(aes(y = Stone..clay..and.glass.products, color="Stone, clay, glass products", group = 1)) +
+        geom_line(aes(y = Fabricated.metal.products, color="Fabricated metal industries", group = 1)) +
+        xlab('Years') +
+        ylab('Tax rate')+
+        theme(axis.text.x = element_text(angle = 90))
+
+c3 = ggplot(compPer, aes(x=row.names(taxRate))) + 
+        geom_line(aes(y = Compensation.of.employees, color = "Average Corporate Tax", group = 1), linetype = "twodash") + 
+        geom_line(aes(y = Machinery, color="Machinery", group = 1)) +
+        geom_line(aes(y = Electric.and.electronic.equipment, color="Electric and electronic equipment", group = 1)) +
+        geom_line(aes(y = Motor.vehicles.and.equipment, color="Motor Vehivles and equipment", group = 1)) +
+        #geom_line(aes(y = Miscellaneous.manufacturing, color="Moscellaneous manufacturing", group = 1)) +
+        xlab('Years') +
+        ylab('Tax rate')+
+        theme(axis.text.x = element_text(angle = 90))
+
+c4 = ggplot(compPer, aes(x=row.names(taxRate))) + 
+        geom_line(aes(y = Compensation.of.employees, color = "Average Corporate Tax", group = 1),linetype = "twodash") + 
+        geom_line(aes(y = Food.and.beverage.and.tobacco.products, color="Food, beverage and tobacco", group = 1)) +
+        #geom_line(aes(y = Textile.mill.products, color="Textile products", group = 1)) +
+        geom_line(aes(y = Apparel.and.leather.and.allied.products, color="Apparel and leather products", group = 1)) +
+        geom_line(aes(y = Printing.and.publishing, color="printing and publishing", group = 1)) +
+        xlab('Years') +
+        ylab('Tax rate')+
+        theme(axis.text.x = element_text(angle = 90))
+
+c5 = ggplot(compPer, aes(x=row.names(taxRate))) + 
+        geom_line(aes(y = Compensation.of.employees, color = "Average corporate tax", group = 1),linetype = "twodash") + 
+        geom_line(aes(y = Chemicals.and.allied.products, color = "Chemical products", group = 1)) + 
+        #geom_line(aes(y = Petroleum.and.coal.products, color="petroleum & coal products", group = 1)) +
+        geom_line(aes(y = Plastics.and.rubber.products, color="Plastics & rubber products", group = 1)) +
+        #geom_line(aes(y = Broadcasting.and.telecommunications, color="Broadcasting & telecommunications", group = 1)) +
+        geom_line(aes(y = Electric..gas..and.sanitary.services, color="Electric, gas, sanitary services", group = 1)) +
+        xlab('Years') +
+        ylab('Tax rate')+
+        theme(axis.text.x = element_text(angle = 90))
+
+c6 = ggplot(compPer, aes(x=row.names(taxRate))) + 
+        geom_line(aes(y = Compensation.of.employees, color = "Average corporate tax", group = 1),linetype = "twodash") + 
+        geom_line(aes(y = Banking.and.credit.agencies, color = "Banking and credit agencies", group = 1)) + 
+        #geom_line(aes(y = Security.and.commodity.brokers, color="Security and commodity brokers", group = 1)) +
+        geom_line(aes(y = Insurance.carriers.and.related.activites, color="Insurance related activites", group = 1)) +
+        geom_line(aes(y = Real.estate, color="real estate", group = 1)) +
+        xlab('Years') +
+        ylab('Tax rate')+
+        theme(axis.text.x = element_text(angle = 90))
+
+# https://www.pewresearch.org/fact-tank/2018/08/07/for-most-us-workers-real-wages-have-barely-budged-for-decades/
+
+temp = (t(compPer))
+
+fit1 <- lm(compPer$Compensation.of.employees ~ taxRate$Corporate.profits.before.tax)
+fit4 <- lm(compPer$Construction ~ taxRate$Construction)
+fit17 <- lm(compPer$Security.and.commodity.brokers ~ taxRate$Security.and.commodity.brokers)
+summary(fit1)
 
 ggplot(fit$model, aes_string(x = names(fit$model)[2],y = names(fit$model)[1]))+geom_point()+stat_smooth(method = "lm", col = "red") + 
         labs(title= "Employee compensation vs. Corporate tax rate", subtitle = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5)," P =",signif(summary(fit)$coef[2,4], 5)), 

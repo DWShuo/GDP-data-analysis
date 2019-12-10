@@ -1350,9 +1350,9 @@ taxRate <- taxRate[-(1:76),] #romve top rows
 taxRate <- as.list(as.data.frame(t(taxRate)))
 taxRate <- do.call(c, taxRate)
 
-combinedDF = do.call(rbind, Map(data.frame, Div=div, Tax=taxRate, Und=und, Wage=wage))
+combinedDF = do.call(rbind, Map(data.frame, Dividends=div, TaxRate=taxRate, UndistributedProfits=und, Wages=wage))
 combinedDF = na.omit(combinedDF)
 
-reg.tree <- rpart(Div ~ Tax + Und + Wage, data = combinedDF)
+reg.tree <- rpart(Dividends ~ TaxRate + UndistributedProfits + Wages, data = combinedDF)
 rpart.plot(reg.tree)
 reg.tree$variable.importance

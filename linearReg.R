@@ -821,7 +821,7 @@ wage = data.frame(t(wage[ ,!(names(wage) %in% c("2017","2018","1931"))]))
 
 #=========== Make some charats ===========================
 w1 = ggplot(wage, aes(x=row.names(wage))) + 
-        geom_line(aes(y = Wages.and.salaries.per.full.time.equivalent.employee, color="Average Corporate Tax", group = 1), linetype = "twodash") + 
+        geom_line(aes(y = Wages.and.salaries.per.full.time.equivalent.employee, color="Average industry wage", group = 1), linetype = "twodash") + 
         geom_line(aes(y = Agriculture..forestry..and.fisheries, color="Agriculture, forestry and fisheries", group = 1)) +
         geom_line(aes(y = Mining..except.oil.and.gas, color="Mining, except oil & gas", group = 1)) +
         geom_line(aes(y = Oil.and.gas.extraction, color="Oil & gas extraction", group = 1)) +
@@ -829,10 +829,10 @@ w1 = ggplot(wage, aes(x=row.names(wage))) +
         xlab('Years') +
         ylab('Wage (Dollars)')+
         theme(axis.text.x = element_text(angle = 90), plot.title = element_text(hjust = 0.5)) +
-        labs(title= "Industry wages over the years") + 
+        labs(title= "Industry wages over the years") 
 
 w2 = ggplot(wage, aes(x=row.names(wage))) + 
-        geom_line(aes(y = Wages.and.salaries.per.full.time.equivalent.employee, color = "Average Corporate Tax", group = 1), linetype = "twodash" ) + 
+        geom_line(aes(y = Wages.and.salaries.per.full.time.equivalent.employee, color = "Average industry wage", group = 1), linetype = "twodash" ) + 
         geom_line(aes(y = Primary.metal.industries, color="Primary metals industries", group = 1)) +
         geom_line(aes(y = Wood.products, color="Wood products", group = 1)) +
         geom_line(aes(y = Stone..clay..and.glass.products, color="Stone, clay, glass products", group = 1)) +
@@ -843,7 +843,7 @@ w2 = ggplot(wage, aes(x=row.names(wage))) +
         labs(title= "Industry wages over the years")
 
 w3 = ggplot(wage, aes(x=row.names(wage))) + 
-        geom_line(aes(y = Wages.and.salaries.per.full.time.equivalent.employee, color = "Average Corporate Tax", group = 1), linetype = "twodash") + 
+        geom_line(aes(y = Wages.and.salaries.per.full.time.equivalent.employee, color = "Average industry wage", group = 1), linetype = "twodash") + 
         geom_line(aes(y = Machinery, color="Machinery", group = 1)) +
         geom_line(aes(y = Electric.and.electronic.equipment, color="Electric and electronic equipment", group = 1)) +
         geom_line(aes(y = Motor.vehicles.and.equipment, color="Motor Vehicles and equipment", group = 1)) +
@@ -854,7 +854,7 @@ w3 = ggplot(wage, aes(x=row.names(wage))) +
         labs(title= "Industry wages over the years")
 
 w4 = ggplot(wage, aes(x=row.names(wage))) + 
-        geom_line(aes(y = Wages.and.salaries.per.full.time.equivalent.employee, color = "Average Corporate Tax", group = 1),linetype = "twodash") + 
+        geom_line(aes(y = Wages.and.salaries.per.full.time.equivalent.employee, color = "Average industry wage", group = 1),linetype = "twodash") + 
         geom_line(aes(y = Food.and.beverage.and.tobacco.products, color="Food, beverage and tobacco", group = 1)) +
         geom_line(aes(y = Textile.mill.products, color="Textile products", group = 1)) +
         geom_line(aes(y = Apparel.and.leather.and.allied.products, color="Apparel and leather products", group = 1)) +
@@ -865,7 +865,7 @@ w4 = ggplot(wage, aes(x=row.names(wage))) +
         labs(title= "Industry wages over the years")
 
 w5 = ggplot(wage, aes(x=row.names(wage))) + 
-        geom_line(aes(y = Wages.and.salaries.per.full.time.equivalent.employee, color = "Average corporate tax", group = 1),linetype = "twodash") + 
+        geom_line(aes(y = Wages.and.salaries.per.full.time.equivalent.employee, color = "Average industry wage", group = 1),linetype = "twodash") + 
         geom_line(aes(y = Chemicals.and.allied.products, color = "Chemical products", group = 1)) + 
         geom_line(aes(y = Petroleum.and.coal.products, color="Petroleum & coal products", group = 1)) +
         geom_line(aes(y = Plastics.and.rubber.products, color="Plastics & rubber products", group = 1)) +
@@ -877,7 +877,7 @@ w5 = ggplot(wage, aes(x=row.names(wage))) +
         labs(title= "Industry wages over the years")
 
 w6 = ggplot(wage, aes(x=row.names(wage))) + 
-        geom_line(aes(y = Wages.and.salaries.per.full.time.equivalent.employee, color = "Average corporate tax", group = 1),linetype = "twodash") + 
+        geom_line(aes(y = Wages.and.salaries.per.full.time.equivalent.employee, color = "Average industry wage", group = 1),linetype = "twodash") + 
         geom_line(aes(y = Banking.and.credit.agencies, color = "Banking and credit agencies", group = 1)) + 
         geom_line(aes(y = Security.and.commodity.brokers, color="Security and commodity brokers", group = 1)) +
         geom_line(aes(y = Insurance.carriers.and.related.activites, color="Insurance related activites", group = 1)) +

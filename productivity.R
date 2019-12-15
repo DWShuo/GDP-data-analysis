@@ -5,6 +5,7 @@ library("blscrapeR")
 library("rpart")
 library("rpart.plot")
 library("MASS")
+library("caret")
 #=========== CPI =============================================
 CPI <- read_excel("CPI.xlsx",sheet = "BLS Data Series")
 CPI <- data.frame(CPI)
@@ -1353,6 +1354,9 @@ taxRate <- do.call(c, taxRate)
 combinedDF = do.call(rbind, Map(data.frame, Dividends=div, TaxRate=taxRate, UndistributedProfits=und, Wages=wage))
 combinedDF = na.omit(combinedDF)
 
-reg.tree <- rpart(Dividends ~ TaxRate + UndistributedProfits + Wages, data = combinedDF)
+flds <- createFolds(combinedDF, k = 10, list = TRUE, returnTrain = FALSE)
+names(flds)[1] <- "train"
+
+reg.tree <- rpart(Dividends ~ TaxRate + UndistributedProfits + Wages, data = combinedDF[flds$train,])
 rpart.plot(reg.tree)
 reg.tree$variable.importance

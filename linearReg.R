@@ -1,7 +1,7 @@
 library("readxl")
 library("stringr")
 library("ggplot2")
-library("blscrapeR")
+#library("blscrapeR")
 #set_bls_key("0ccfedf314414057a81e50d7ab69a64a")
 
 #get cpi data to adjust for inflation
